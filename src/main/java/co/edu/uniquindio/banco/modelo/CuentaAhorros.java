@@ -3,6 +3,7 @@ package co.edu.uniquindio.banco.modelo;
 import co.edu.uniquindio.banco.modelo.enums.TipoTransaccion;
 import co.edu.uniquindio.banco.modelo.enums.CategoriaTransaccion;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.List;
  * @autor caflorezvi
  */
 @Getter
+@Setter
 @ToString
 public class CuentaAhorros {
 
@@ -66,9 +68,8 @@ public class CuentaAhorros {
 
         // Se valida que el saldo sea suficiente
         if (saldo >= cantidad) {
-
             // Se realiza el retiro
-            saldo -= cantidad;
+            setSaldo(getSaldo()-cantidad);
 
             // Se registra la transacción de depósito en la cuenta de destino
             cuentaDestino.depositar(cantidad, propietario, categoria);

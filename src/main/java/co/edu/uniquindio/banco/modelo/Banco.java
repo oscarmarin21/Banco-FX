@@ -16,8 +16,16 @@ import java.util.Random;
 public class Banco {
     private final ArrayList<Usuario> usuarios;
     private final ArrayList<CuentaAhorros> cuentasAhorros;
+    public static Banco INSTANCIA;
 
-    public Banco() {
+    public static Banco getInstancia(){
+        if(INSTANCIA == null){
+            INSTANCIA = new Banco();
+        }
+        return INSTANCIA;
+    }
+
+    private Banco() {
         usuarios = new ArrayList<>();
         cuentasAhorros = new ArrayList<>();
         llenarDatosPrueba();
@@ -33,8 +41,8 @@ public class Banco {
             agregarUsuario("Juan", "Calle 2", "456", "juan@email.com", "456");
             agregarCuentaAhorros("123", 1000);
             agregarCuentaAhorros("456", 2000);
-
-            System.out.println(cuentasAhorros);
+            System.out.println(obtenerCuentaAhorros(obtenerUsuario("456")));
+            realizarTransferencia(obtenerCuentaAhorros(obtenerUsuario("123")).getNumeroCuenta(),obtenerCuentaAhorros(obtenerUsuario("456")).getNumeroCuenta(),200,CategoriaTransaccion.FACTURAS);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -119,8 +127,10 @@ public class Banco {
 
         for (int i = 0; i < usuarios.size(); i++) {
             if (usuarios.get(i).getNumeroIdentificacion().equals(numeroIdentificacion)) {
-                Usuario usuario = new Usuario(nombre, direccion, numeroIdentificacion, correoElectronico, contrasena);
-                usuarios.set(i, usuario);
+                Usuario usuario = usuarios.get(i);
+                usuario.setNombre(nombre);
+                usuario.setCorreoElectronico(correoElectronico);
+                usuario.setDireccion(direccion);
                 break;
             }
         }
@@ -250,6 +260,7 @@ public class Banco {
 
         if(cuentaOrigen != null && cuentaDestino != null){
             cuentaOrigen.transferir(monto, cuentaDestino, categoria);
+
         }else{
             throw new Exception("Error con los números de cuenta");
         }
@@ -260,7 +271,7 @@ public class Banco {
      * @param numeroIdentificacion número de identificación del usuario
      * @return usuario o null si no existe
      */
-    private Usuario obtenerUsuario(String numeroIdentificacion){
+    public Usuario obtenerUsuario(String numeroIdentificacion){
         for(int i = 0; i < usuarios.size(); i++){
             if(usuarios.get(i).getNumeroIdentificacion().equals(numeroIdentificacion)){
                 return usuarios.get(i);
@@ -281,6 +292,25 @@ public class Banco {
             }
         }
         return null;
+    }
+
+    public CuentaAhorros obtenerCuentaAhorros(Usuario usuario){
+        for(int i = 0; i < cuentasAhorros.size(); i++){
+            if(cuentasAhorros.get(i).getPropietario().getNumeroIdentificacion().equals(usuario.getNumeroIdentificacion())){
+                return cuentasAhorros.get(i);
+            }
+        }
+        return null;
+    }
+
+    public float ConsultarSaldo(String numeroCuenta){
+        float saldo = 0;
+        for(int i = 0; i < cuentasAhorros.size(); i++) {
+            if (cuentasAhorros.get(i).getNumeroCuenta().equals(numeroCuenta)) {
+                saldo = cuentasAhorros.get(i).getSaldo();
+            }
+        }
+        return saldo;
     }
 
 }

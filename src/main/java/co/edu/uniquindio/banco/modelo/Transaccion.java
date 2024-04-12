@@ -22,4 +22,8 @@ public class Transaccion {
     private final LocalDateTime fecha;
     private final CategoriaTransaccion categoria;
 
+    public String getNombreUsuario() {
+        return usuario.getNombre(); // Asume que Usuario tiene un método getNombre()
+    }
+
 }

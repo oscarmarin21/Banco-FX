@@ -6,11 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * Clase que representa la aplicación de un banco y que se encarga
- * de cargar la ventana principal de la aplicación.
- * @author caflorezvi
- */
 public class BancoApp extends Application {
 
     @Override

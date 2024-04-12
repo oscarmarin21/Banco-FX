@@ -1,17 +1,14 @@
 package co.edu.uniquindio.banco.controlador;
 
+import co.edu.uniquindio.banco.controlador.service.ServiceControlador;
 import co.edu.uniquindio.banco.modelo.Banco;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
-/**
- * Clase que representa el controlador de la ventana de registro de usuario
- * @author caflorezvi
- */
 public class RegistroControlador {
 
     @FXML
@@ -24,19 +21,15 @@ public class RegistroControlador {
     private TextField txtDireccion;
     @FXML
     private PasswordField txtPassword;
+    @FXML
+    private Button btnRegister;
 
-    private final Banco banco;
-
-    /**
-     * Constructor de la clase, inicializa el banco
-     */
-    public RegistroControlador(){
-        banco = new Banco();
-    }
+    private final Banco banco = Banco.getInstancia();
+    private final ServiceControlador serviceControlador = ServiceControlador.getInstancia();
 
     /**
-     * Método que se ejecuta al presionar el botón de registrarse
-     * @param actionEvent evento de acción
+     * Método para registrar al usuario
+     * @param actionEvent Evento que representa el clic del botón
      */
     public void registrarse(ActionEvent actionEvent) {
 
@@ -53,33 +46,20 @@ public class RegistroControlador {
             banco.agregarCuentaAhorros(txtIdentificacion.getText(), 0F);
 
             // Se muestra un mensaje de éxito y se cierra la ventana
-            crearAlerta("Usuario registrado correctamente", Alert.AlertType.INFORMATION);
-            cerrarVentana();
+            serviceControlador.crearAlerta("Usuario registrado correctamente", Alert.AlertType.INFORMATION);
+            serviceControlador.cerrarVentana(btnRegister);
 
         }catch (Exception e){
-            crearAlerta(e.getMessage(), Alert.AlertType.ERROR);
+            serviceControlador.crearAlerta(e.getMessage(), Alert.AlertType.ERROR);
         }
-
     }
 
     /**
-     * Método que se encarga de mostrar una alerta en pantalla
-     * @param mensaje mensaje a mostrar
-     * @param tipo tipo de alerta
+     * Método que se ejecuta al presionar el botón de regresar
+     * @param actionEvent Evento que representa el clic del botón
      */
-    public void crearAlerta(String mensaje, Alert.AlertType tipo){
-        Alert alert = new Alert(tipo);
-        alert.setTitle("Alerta");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    /**
-     * Método que se encarga de cerrar la ventana actual
-     */
-    public void cerrarVentana(){
-        Stage stage = (Stage) txtIdentificacion.getScene().getWindow();
-        stage.close();
+    public void regresar(ActionEvent actionEvent) {
+        serviceControlador.cerrarVentana(btnRegister);
+        serviceControlador.navegarVentana("/inicio.fxml", "Banco - Inicio");
     }
 }
